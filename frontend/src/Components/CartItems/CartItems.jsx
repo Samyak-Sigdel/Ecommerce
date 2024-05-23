@@ -64,6 +64,7 @@ export const CartItems = () => {
                 <div className="cartitems-promobox">
                     <input type="text" placeholder='promocode' />
                     <button>Sumbit</button>
+                    
                 </div>
             </div>
 
