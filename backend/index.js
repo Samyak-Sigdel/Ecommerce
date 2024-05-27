@@ -152,10 +152,11 @@ const Users = mongoose.model('Users',{
     date:{
         type:Date,
         default:Date.now,
-    },
+    }
 })
 
-// Creating endpoint for registering the user
+//creating endpoint for registering the user 
+
 
 app.post('/signup',async (req,res)=>{
     let check = await Users.findOne({email:req.body.email});
@@ -186,15 +187,42 @@ app.post('/signup',async (req,res)=>{
     const token =jwt.sign(data,'secret_ecom')
     res.json({success:true,token})
 
-
-
 })
 
 
+//creating endpoint for user login 
+
+app.post('/login',async (req,res)=>{
+    let user = await Users.findOne({email:req.body.email});
+    if (user) {
+        const  passCompare = req.body.password === user.password;
+        if (passCompare) {
+           const data = {
+            user:{
+                id:user.id
+            }
+           }
+           const token = jwt.sign(data,'secret_ecom');
+           res.json({success:true,token});
+        }
+        else{
+            res.json({success:false,errors:"Wrong password"});
+        }
+    }
+    else{
+        res.json({success:false,errors:"Wrong email ID"})
+    }
+})
 
 
+//creating endpoint for newcollection data 
 
-
+app.get('/newcollections',async (req,res)=>{
+    let products =await Product.find({});
+    let newcollection = products.slice(1).slice(-8);
+    console.log("NewCollection Fetched");
+    res.send(newcollection);
+})
 
 
 
