@@ -7,6 +7,7 @@ const multer =require("multer");
 const path =require("path");
 const cors = require('cors');
 const { type } = require('os');
+const { log } = require('console');
 
 app.use(express.json());
 app.use(cors());
@@ -257,12 +258,32 @@ const fetchUser = async (req,res,next)=>{
 //creating endpoint for adding productss in cartdata
 
 app.post('/addtocart',fetchUser,async(req,res)=>{
-    
+
+    console.log("added",req.body.itemId);
     let userData = await Users.findOne({_id:req.user.id});
     userData.cartData[req.body.itemId] +=1;
-    await Users.findOneAndUpdate({id:req.user.id},{cartData:userData.cartData});
-    res.send("added")
+    await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
+    res.send("Added")
 })
+
+//creating endpoint to remove product from cart data 
+
+app.post('/removefromcart',fetchUser,async (req,res)=>{
+    console.log("removed",req.body.itemId);
+    let userData = await Users.findOne({_id:req.user.id});
+    if(  userData.cartData[req.body.itemId] >0 )
+    userData.cartData[req.body.itemId] -=1;
+    await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
+    res.send("removed")
+})
+
+//creating  endpoint to get cartdata
+app.post('/getcart',fetchUser, async (req,res)=>{
+    console.log("GetCart");
+    let userData = await Users.findOne({_id:req.user.id});
+    res.json(userData.cartData);
+    
+} )
 
 app.listen(port,(error)=>{
     if(!error){
