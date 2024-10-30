@@ -16,6 +16,7 @@ app.use(cors());
 
 mongoose.connect(`mongodb+srv://samyaksigdel:march@cluster0.ergdeas.mongodb.net/Syk_Shades`);
 
+
 //API Creation //
 
 app.get("/",(req,res)=>{
@@ -229,7 +230,7 @@ app.get('/newcollections',async (req,res)=>{
 
 app.get('/popularinwomen', async (req,res)=>{
     let products = await Product.find({category:"women"})
-    let popular_in_women = products.slice(0,4);
+    let popular_in_women = products.slice(0,3);
     console.log("Popular in Women Fetched");
     res.send(popular_in_women);
 
